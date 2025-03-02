@@ -4,14 +4,14 @@ import com.dhruvil.project.rideBooking.Ride.Booking.dto.DriverDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.RideDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.RideRequestDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.RiderDto;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.Driver;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.Rider;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.*;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideRequestStatus;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
 import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.RideRequestRepository;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.RiderRepository;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.DriverService;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.RideService;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.RiderService;
 import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.DriverMatchingStrategy;
 import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.RideFareCalculationStrategy;
@@ -36,6 +36,8 @@ public class RiderServiceImpl implements RiderService {
     private final RideStrategyManager rideStrategyManager;
     private final RideRequestRepository rideRequestRepository;
     private final RiderRepository riderRepository;
+    private final RideService rideService;
+    private final DriverService driverService;
     @Override
     @Transactional
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
@@ -57,7 +59,21 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public RideDto cancelRide(Long rideId) {
-        return null;
+        Rider rider = getCurrentRider();
+        Ride ride = rideService.getRideById(rideId);
+
+        if(!rider.equals(ride.getRider())) {
+            throw new RuntimeException(("Rider does not own this ride with id: "+rideId));
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
+            throw new RuntimeException("Ride cannot be cancelled, invalid status: "+ride.getRideStatus());
+        }
+
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.CANCELLED);
+        driverService.updateDriverAvailability(ride.getDriver(), true);
+
+        return modelMapper.map(savedRide, RideDto.class);
     }
 
     @Override
@@ -72,7 +88,10 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
-        return null;
+        Rider currentRider = getCurrentRider();
+        return rideService.getAllRidesOfRider(currentRider, pageRequest).map(
+                ride -> modelMapper.map(ride, RideDto.class)
+        );
     }
 
     @Override

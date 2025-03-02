@@ -11,6 +11,7 @@ import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
 import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.DriverRepository;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.DriverService;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.PaymentService;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.RideRequestService;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.RideService;
 import jakarta.transaction.Transactional;
@@ -30,7 +31,7 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final RideService rideService;
     private final ModelMapper modelMapper;
-
+    private final PaymentService paymentService;
 
 
     @Override
@@ -47,7 +48,7 @@ public class DriverServiceImpl implements DriverService {
             throw new RuntimeException("Driver cannot accept ride due to unavailability");
         }
 
-        currentDriver.setAvailable(false);
+        updateDriverAvailability(currentDriver,false);
         Driver savedDriver = driverRepository.save(currentDriver);
 
         Ride ride = rideService.createNewRide(rideRequest, savedDriver);
@@ -56,7 +57,21 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public RideDto cancelRide(Long rideId) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+
+        Driver driver = getCurrentDriver();
+        if(!driver.equals(ride.getDriver())) {
+            throw new RuntimeException("Driver cannot start a ride as he has not accepted it earlier");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
+            throw new RuntimeException("Ride cannot be cancelled, invalid status: "+ride.getRideStatus());
+        }
+
+        rideService.updateRideStatus(ride, RideStatus.CANCELLED);
+        updateDriverAvailability(driver, true);
+
+        return modelMapper.map(ride, RideDto.class);
     }
 
     @Override
@@ -82,8 +97,26 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    @Transactional
     public RideDto endRide(Long rideId) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if(!driver.equals(ride.getDriver())) {
+            throw new RuntimeException("Driver cannot start a ride as he has not accepted it earlier");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ONGOING)) {
+            throw new RuntimeException("Ride status is not ONGOING hence cannot be ended, status: "+ride.getRideStatus());
+        }
+
+        ride.setEndedAt(LocalDateTime.now());
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ENDED);
+        updateDriverAvailability(driver, true);
+
+        paymentService.processPayment(ride);
+
+        return modelMapper.map(savedRide, RideDto.class);
     }
 
     @Override
@@ -93,12 +126,16 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverDto getMyProfile() {
-        return null;
+        Driver currentDriver = getCurrentDriver();
+        return modelMapper.map(currentDriver, DriverDto.class);
     }
 
     @Override
     public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
-        return null;
+        Driver currentDriver = getCurrentDriver();
+        return rideService.getAllRidesOfDriver(currentDriver, pageRequest).map(
+                ride -> modelMapper.map(ride, RideDto.class)
+        );
     }
 
     @Override
@@ -109,7 +146,9 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver updateDriverAvailability(Driver driver, boolean available) {
-        return null;
+        driver.setAvailable(available);
+        driverRepository.save(driver);
+        return driver;
     }
 
     @Override

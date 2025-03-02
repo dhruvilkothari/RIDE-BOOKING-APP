@@ -53,12 +53,12 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest) {
-        return null;
+        return rideRepository.findByRider(rider, pageRequest);
     }
 
     @Override
     public Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest) {
-        return null;
+        return rideRepository.findByDriver(driver, pageRequest);
     }
     private String generateRandomOTP() {
         Random random = new Random();
