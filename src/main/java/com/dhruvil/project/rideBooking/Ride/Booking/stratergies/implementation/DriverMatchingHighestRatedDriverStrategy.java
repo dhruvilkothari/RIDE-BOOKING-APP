@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional()
+@Transactional
 public class DriverMatchingHighestRatedDriverStrategy implements DriverMatchingStrategy {
 
     private final DriverRepository driverRepository;

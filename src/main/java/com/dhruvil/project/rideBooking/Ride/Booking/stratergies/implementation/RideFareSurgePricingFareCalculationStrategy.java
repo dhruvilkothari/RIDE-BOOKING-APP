@@ -2,6 +2,7 @@ package com.dhruvil.project.rideBooking.Ride.Booking.stratergies.implementation;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.DistanceService;
 import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.RideFareCalculationStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.utils.SurgeFactorCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,6 @@ public class RideFareSurgePricingFareCalculationStrategy implements RideFareCalc
     public double calculateFare(RideRequest rideRequest) {
         double distance = distanceService.calculateDistance(rideRequest.getPickupLocation(),
                 rideRequest.getDropOffLocation());
-        return distance*RIDE_FARE_MULTIPLIER*SURGE_FACTOR;
+        return distance*RIDE_FARE_MULTIPLIER* SurgeFactorCalculator.getSurgeFactor();
     }
 }
