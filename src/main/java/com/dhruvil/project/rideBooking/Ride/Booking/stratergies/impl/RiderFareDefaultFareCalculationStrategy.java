@@ -1,6 +1,4 @@
-package com.dhruvil.project.rideBooking.Ride.Booking.stratergies.implementation;
-
-
+package com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.DistanceService;
 import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.RideFareCalculationStrategy;

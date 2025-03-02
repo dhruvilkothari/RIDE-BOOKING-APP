@@ -1,10 +1,9 @@
-package com.dhruvil.project.rideBooking.Ride.Booking.services.implementation;
+package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Driver;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Ride;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Rider;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideRequestStatus;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
 import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.RideRepository;
@@ -14,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -21,6 +21,7 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class RideServiceImpl implements RideService {
+
     private final RideRepository rideRepository;
     private final RideRequestService rideRequestService;
     private final ModelMapper modelMapper;
@@ -30,6 +31,7 @@ public class RideServiceImpl implements RideService {
         return rideRepository.findById(rideId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ride not found with id: "+rideId));
     }
+
 
     @Override
     public Ride createNewRide(RideRequest rideRequest, Driver driver) {
@@ -60,6 +62,7 @@ public class RideServiceImpl implements RideService {
     public Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest) {
         return rideRepository.findByDriver(driver, pageRequest);
     }
+
     private String generateRandomOTP() {
         Random random = new Random();
         int otpInt = random.nextInt(10000);  //0 to 9999

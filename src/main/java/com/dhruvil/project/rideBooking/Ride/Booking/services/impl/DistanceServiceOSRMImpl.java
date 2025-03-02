@@ -1,4 +1,4 @@
-package com.dhruvil.project.rideBooking.Ride.Booking.services.implementation;
+package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
 import com.dhruvil.project.rideBooking.Ride.Booking.services.DistanceService;
 import lombok.Data;

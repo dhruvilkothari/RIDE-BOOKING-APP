@@ -1,6 +1,5 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.services;
 
-
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Driver;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Ride;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;

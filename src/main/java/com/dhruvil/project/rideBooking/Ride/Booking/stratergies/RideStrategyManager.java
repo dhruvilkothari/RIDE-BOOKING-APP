@@ -1,10 +1,9 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.stratergies;
 
-
-import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.implementation.DriverMatchingHighestRatedDriverStrategy;
-import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.implementation.DriverMatchingNearestDriverStrategy;
-import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.implementation.RideFareSurgePricingFareCalculationStrategy;
-import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.implementation.RiderFareDefaultFareCalculationStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl.DriverMatchingHighestRatedDriverStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl.DriverMatchingNearestDriverStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl.RideFareSurgePricingFareCalculationStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl.RiderFareDefaultFareCalculationStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

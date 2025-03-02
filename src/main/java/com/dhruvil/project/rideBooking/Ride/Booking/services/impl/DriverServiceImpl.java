@@ -1,4 +1,4 @@
-package com.dhruvil.project.rideBooking.Ride.Booking.services.implementation;
+package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.DriverDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.RideDto;
@@ -6,22 +6,21 @@ import com.dhruvil.project.rideBooking.Ride.Booking.dto.RiderDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Driver;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Ride;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideRequestStatus;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
-import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.DriverRepository;
-import com.dhruvil.project.rideBooking.Ride.Booking.services.DriverService;
-import com.dhruvil.project.rideBooking.Ride.Booking.services.PaymentService;
-import com.dhruvil.project.rideBooking.Ride.Booking.services.RideRequestService;
-import com.dhruvil.project.rideBooking.Ride.Booking.services.RideService;
-import jakarta.transaction.Transactional;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class DriverServiceImpl implements DriverService {
     private final RideService rideService;
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
-
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -48,8 +47,7 @@ public class DriverServiceImpl implements DriverService {
             throw new RuntimeException("Driver cannot accept ride due to unavailability");
         }
 
-        updateDriverAvailability(currentDriver,false);
-        Driver savedDriver = driverRepository.save(currentDriver);
+        Driver savedDriver = updateDriverAvailability(currentDriver, false);
 
         Ride ride = rideService.createNewRide(rideRequest, savedDriver);
         return modelMapper.map(ride, RideDto.class);
@@ -93,6 +91,10 @@ public class DriverServiceImpl implements DriverService {
 
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
+
+        paymentService.createNewPayment(savedRide);
+        ratingService.createNewRating(savedRide);
+
         return modelMapper.map(savedRide, RideDto.class);
     }
 
@@ -121,7 +123,18 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public RiderDto rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if(!driver.equals(ride.getDriver())) {
+            throw new RuntimeException("Driver is not the owner of this Ride");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)) {
+            throw new RuntimeException("Ride status is not Ended hence cannot start rating, status: "+ride.getRideStatus());
+        }
+
+        return ratingService.rateRider(ride, rating);
     }
 
     @Override
@@ -140,20 +153,22 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver getCurrentDriver() {
-        return driverRepository.findById(2L).orElseThrow(() -> new ResourceNotFoundException("Driver not found with " +
-                "id "+2));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return driverRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not associated with user with " +
+                "id "+user.getId()));
     }
 
     @Override
     public Driver updateDriverAvailability(Driver driver, boolean available) {
         driver.setAvailable(available);
-        driverRepository.save(driver);
-        return driver;
+        return driverRepository.save(driver);
     }
 
     @Override
     public Driver createNewDriver(Driver driver) {
-        return null;
+        return driverRepository.save(driver);
     }
 
 }

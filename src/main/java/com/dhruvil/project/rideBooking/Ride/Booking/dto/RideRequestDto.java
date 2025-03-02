@@ -1,7 +1,6 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.dto;
 
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentMethod;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideRequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

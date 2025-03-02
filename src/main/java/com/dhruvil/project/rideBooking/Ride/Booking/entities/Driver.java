@@ -13,7 +13,6 @@ import org.locationtech.jts.geom.Point;
 @Table(indexes = {
         @Index(name = "idx_driver_vehicle_id", columnList = "vehicleId")
 })
-@Data
 public class Driver {
 
     @Id

@@ -1,11 +1,10 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.entities;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentMethod;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideRequestStatus;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
+
+import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentMethod;
+import com.codingshuttle.project.uber.uberApp.entities.enums.RideRequestStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.locationtech.jts.geom.Point;
 

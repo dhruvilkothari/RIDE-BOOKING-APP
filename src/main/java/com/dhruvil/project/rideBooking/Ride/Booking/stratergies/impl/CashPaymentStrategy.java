@@ -1,13 +1,13 @@
-package com.dhruvil.project.rideBooking.Ride.Booking.stratergies.implementation;
+package com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl;
 
-
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.Driver;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.Payment;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentStatus;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionMethod;
-import com.dhruvil.project.rideBooking.Ride.Booking.repositories.PaymentRepository;
-import com.dhruvil.project.rideBooking.Ride.Booking.services.WalletService;
-import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.PaymentStrategy;
+import com.codingshuttle.project.uber.uberApp.entities.Driver;
+import com.codingshuttle.project.uber.uberApp.entities.Payment;
+import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentStatus;
+import com.codingshuttle.project.uber.uberApp.entities.enums.TransactionMethod;
+import com.codingshuttle.project.uber.uberApp.repositories.PaymentRepository;
+import com.codingshuttle.project.uber.uberApp.services.PaymentService;
+import com.codingshuttle.project.uber.uberApp.services.WalletService;
+import com.codingshuttle.project.uber.uberApp.strategies.PaymentStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

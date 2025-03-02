@@ -1,4 +1,5 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.entities;
+
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentMethod;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentStatus;
 import jakarta.persistence.*;
@@ -13,7 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Builder
-@Data
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

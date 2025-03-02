@@ -1,59 +1,62 @@
-package com.dhruvil.project.rideBooking.Ride.Booking.services.implementation;
+package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.DriverDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.RideDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.RideRequestDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.dto.RiderDto;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.*;
-import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideRequestStatus;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
 import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.RideRequestRepository;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.RiderRepository;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.DriverService;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.RatingService;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.RideService;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.RiderService;
-import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.DriverMatchingStrategy;
-import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.RideFareCalculationStrategy;
 import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.RideStrategyManager;
-import com.dhruvil.project.rideBooking.Ride.Booking.utils.Logger;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-
 public class RiderServiceImpl implements RiderService {
-    private final ModelMapper  modelMapper;
+
+    private final ModelMapper modelMapper;
     private final RideStrategyManager rideStrategyManager;
     private final RideRequestRepository rideRequestRepository;
     private final RiderRepository riderRepository;
     private final RideService rideService;
     private final DriverService driverService;
+    private final RatingService ratingService;
+
     @Override
     @Transactional
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
         Rider rider = getCurrentRider();
-
         RideRequest rideRequest = modelMapper.map(rideRequestDto, RideRequest.class);
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
         rideRequest.setRider(rider);
 
-//        Double fare = rideFareCalculationStrategy.calculateFare(rideRequest);
         Double fare = rideStrategyManager.rideFareCalculationStrategy().calculateFare(rideRequest);
         rideRequest.setFare(fare);
 
         RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
 
-        List<Driver> drivers = rideStrategyManager.driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
+        List<Driver> drivers = rideStrategyManager
+                .driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
+
+//        TODO : Send notification to all the drivers about this ride request
+
         return modelMapper.map(savedRideRequest, RideRequestDto.class);
     }
 
@@ -78,12 +81,24 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public DriverDto rateDriver(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Rider rider = getCurrentRider();
+
+        if(!rider.equals(ride.getRider())) {
+            throw new RuntimeException("Rider is not the owner of this Ride");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)) {
+            throw new RuntimeException("Ride status is not Ended hence cannot start rating, status: "+ride.getRideStatus());
+        }
+
+        return ratingService.rateDriver(ride, rating);
     }
 
     @Override
     public RiderDto getMyProfile() {
-        return null;
+        Rider currentRider = getCurrentRider();
+        return modelMapper.map(currentRider, RiderDto.class);
     }
 
     @Override
@@ -106,9 +121,11 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public Rider getCurrentRider() {
-//        TODO : implement Spring security
-        return riderRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException(
-                "Rider not found with id: "+1
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return riderRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(
+                "Rider not associated with user with id: "+user.getId()
         ));
     }
+
 }

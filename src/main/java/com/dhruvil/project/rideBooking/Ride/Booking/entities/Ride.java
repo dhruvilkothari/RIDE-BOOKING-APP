@@ -1,8 +1,12 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.entities;
+
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentMethod;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.locationtech.jts.geom.Point;
 
@@ -17,7 +21,6 @@ import java.time.LocalDateTime;
         @Index(name = "idx_ride_rider", columnList = "rider_id"),
         @Index(name = "idx_ride_driver", columnList = "driver_id")
 })
-@Data
 public class Ride {
 
     @Id

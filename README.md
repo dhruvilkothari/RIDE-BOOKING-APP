@@ -1,34 +1,26 @@
-# Ride Booking System: A Modern Spring Boot Application for Managing Ride Services
+# Ride Booking System: A Comprehensive Ride-Sharing Platform with Real-Time Matching and Secure Payments
 
-The Ride Booking System is a comprehensive Spring Boot application that provides a robust platform for managing ride-sharing services. This system enables riders to request rides, drivers to accept and manage rides, and handles all associated functionalities including payments, ratings, and user management.
+A Spring Boot-based ride booking system that provides real-time driver matching, secure payment processing, and dynamic fare calculation with support for both cash and wallet payments.
 
-The application implements a sophisticated service architecture with features including:
-- User authentication and authorization with role-based access control
-- Real-time ride matching using location-based services
-- Multiple payment methods support (Wallet and Cash)
-- Dynamic fare calculation with surge pricing
-- Driver-rider rating system
-- Wallet management with transaction tracking
-- Distance calculation using OSRM (Open Source Routing Machine)
-- Comprehensive error handling and response standardization
+The system implements advanced features like surge pricing, driver-rider rating system, and intelligent driver matching based on proximity and ratings. It provides a robust architecture for managing the complete lifecycle of ride bookings from request to payment processing, with built-in security using JWT authentication.
 
 ## Repository Structure
 ```
 .
 ├── src/main/java/com/dhruvil/project/rideBooking/Ride/Booking/
-│   ├── RideBookingApplication.java        # Main application entry point
-│   ├── advices/                          # Global exception and response handlers
-│   ├── configs/                          # Application configuration classes
-│   ├── controller/                       # REST API endpoints
-│   ├── dto/                             # Data Transfer Objects for API communication
-│   ├── entities/                        # JPA entity classes and enums
-│   ├── repositories/                    # Spring Data JPA repositories
-│   ├── services/                        # Business logic interfaces and implementations
-│   ├── stratergies/                     # Strategy pattern implementations for payments and matching
+│   ├── RideBookingApplication.java          # Main Spring Boot application entry point
+│   ├── advices/                            # Global exception and response handlers
+│   ├── configs/                            # Security and mapper configurations
+│   ├── controller/                         # REST API endpoints for auth, drivers and riders
+│   ├── dto/                               # Data transfer objects for API requests/responses
+│   ├── entities/                          # JPA entities and enums for domain model
+│   ├── repositories/                      # Spring Data JPA repositories
+│   ├── security/                         # JWT authentication and security filters
+│   ├── services/                         # Business logic implementation
+│   │   └── impl/                        # Service implementations
+│   ├── stratergies/                     # Strategy pattern implementations for core features
+│   │   └── impl/                       # Concrete strategy implementations
 │   └── utils/                          # Utility classes for logging and calculations
-├── resources/
-│   ├── application.properties           # Application configuration properties
-│   └── data.sql                        # Database initialization scripts
 └── pom.xml                             # Maven project configuration
 ```
 
@@ -36,8 +28,8 @@ The application implements a sophisticated service architecture with features in
 ### Prerequisites
 - Java 21
 - PostgreSQL database
-- Maven 3.x
-- OSRM service access for distance calculations
+- Maven
+- Spring Boot 3.4.3
 
 ### Installation
 1. Clone the repository:
@@ -49,91 +41,101 @@ cd ride-booking
 2. Configure database properties in `application.properties`:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/ride_booking
-spring.datasource.username=your_username
-spring.datasource.password=your_password
+spring.datasource.username=<your-username>
+spring.datasource.password=<your-password>
 ```
 
-3. Build the application:
+3. Build the project:
 ```bash
 mvn clean install
 ```
 
-4. Run the application:
+### Quick Start
+1. Start the application:
 ```bash
 mvn spring-boot:run
 ```
 
-### Quick Start
-1. Create a new user account:
+2. Register a new rider:
 ```bash
 curl -X POST http://localhost:8080/auth/signup \
   -H "Content-Type: application/json" \
   -d '{"name":"John Doe","email":"john@example.com","password":"password123"}'
 ```
 
-2. Request a ride:
+3. Request a ride:
 ```bash
-curl -X POST http://localhost:8080/rides/request \
+curl -X POST http://localhost:8080/rider/request-ride \
+  -H "Authorization: Bearer <your-token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "pickupLocation": {"x": 73.856743, "y": 18.516726},
-    "dropLocation": {"x": 73.856743, "y": 18.516726},
+    "pickupLocation": {"x": 12.34, "y": 56.78},
+    "dropLocation": {"x": 23.45, "y": 67.89},
     "paymentMethod": "WALLET"
   }'
 ```
 
 ### More Detailed Examples
-1. Driver onboarding:
+1. Driver Onboarding:
 ```bash
-curl -X POST http://localhost:8080/auth/driver/onboard \
+curl -X POST http://localhost:8080/auth/onboard-driver \
+  -H "Authorization: Bearer <admin-token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "userId": 1,
-    "vehicleId": "MH12AB1234"
+    "userId": 123,
+    "vehicleId": "KA01AB1234"
   }'
 ```
 
-2. Rate a completed ride:
+2. Rate a Driver:
 ```bash
-curl -X POST http://localhost:8080/rides/{rideId}/rate \
+curl -X POST http://localhost:8080/rider/rate-driver \
+  -H "Authorization: Bearer <your-token>" \
   -H "Content-Type: application/json" \
   -d '{
+    "rideId": 456,
     "rating": 5
   }'
 ```
 
 ### Troubleshooting
-1. Database Connection Issues
-- Error: "Could not connect to database"
+1. JWT Token Issues
+- Problem: "Invalid JWT token" error
 - Solution: 
-  ```bash
-  # Check database status
-  pg_isready -h localhost -p 5432
-  # Verify database credentials in application.properties
-  ```
-
-2. OSRM Service Issues
-- Error: "Error getting data from OSRM"
-- Solution:
-  - Verify OSRM service is accessible
-  - Check network connectivity
-  - Verify coordinates are within valid range
-
-## Data Flow
-The application follows a layered architecture for processing ride requests and managing bookings.
-
-```ascii
-[User/Driver] -> [Controllers] -> [Services] -> [Repositories]
-     ↑              ↓               ↓              ↓
-     └──────[Response]←──[DTOs]←──[Entities]←──[Database]
+```bash
+# Check token expiration
+curl -X POST http://localhost:8080/auth/refresh \
+  -H "Cookie: refreshToken=<your-refresh-token>"
 ```
 
-Component interactions:
-1. Controllers receive HTTP requests and validate input
-2. Services implement business logic and orchestrate operations
-3. Strategies handle specific algorithms (matching, pricing)
-4. Repositories manage data persistence
-5. DTOs handle data transfer between layers
-6. Global exception handlers manage error responses
-7. Events trigger notifications and updates
-8. Payment processing occurs asynchronously
+2. Driver Matching Issues
+- Problem: No drivers found
+- Solution: Enable debug logging in application.properties:
+```properties
+logging.level.com.dhruvil.project.rideBooking=DEBUG
+```
+
+## Data Flow
+The system follows a request-response flow for ride booking with real-time driver matching.
+
+```ascii
+User -> AuthController -> JWT Authentication -> RiderController
+  |
+  v
+RideRequest -> DriverMatchingStrategy -> Available Drivers
+  |
+  v
+Driver Accepts -> RideService -> Payment Processing
+  |
+  v
+Ride Completion -> Rating System -> Wallet Updates
+```
+
+Key Component Interactions:
+1. Authentication flow uses JWT tokens for secure API access
+2. RideStrategyManager determines driver matching and fare calculation strategies
+3. PaymentStrategyManager handles different payment methods (CASH/WALLET)
+4. Rating system updates both driver and rider ratings after ride completion
+5. Wallet transactions are processed asynchronously for payment settlements
+6. Email notifications are sent for ride status updates
+7. Geographic calculations use OSRM for distance and route optimization
