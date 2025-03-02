@@ -6,6 +6,7 @@ import com.dhruvil.project.rideBooking.Ride.Booking.entities.Wallet;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.WalletTransaction;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionMethod;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionType;
+import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.WalletRepository;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.WalletService;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.WalletTransactionService;

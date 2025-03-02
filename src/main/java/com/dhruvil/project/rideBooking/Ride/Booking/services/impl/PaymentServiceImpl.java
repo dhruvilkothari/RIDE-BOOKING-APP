@@ -1,12 +1,12 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
-import com.codingshuttle.project.uber.uberApp.entities.Payment;
-import com.codingshuttle.project.uber.uberApp.entities.Ride;
-import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentStatus;
-import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
-import com.codingshuttle.project.uber.uberApp.repositories.PaymentRepository;
-import com.codingshuttle.project.uber.uberApp.services.PaymentService;
-import com.codingshuttle.project.uber.uberApp.strategies.PaymentStrategyManager;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.Payment;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.Ride;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentStatus;
+import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
+import com.dhruvil.project.rideBooking.Ride.Booking.repositories.PaymentRepository;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.PaymentService;
+import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.PaymentStrategyManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

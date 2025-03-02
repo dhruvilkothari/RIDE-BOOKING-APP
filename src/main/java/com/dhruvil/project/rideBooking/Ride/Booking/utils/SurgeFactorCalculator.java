@@ -22,7 +22,7 @@ import java.util.Random;
     public static double getSurgeFactor(){
         populateSurgeFactorMap();
         Random random = new Random();
-        int value = random.nextInt(6);
+        int value = random.nextInt(factors.size());
         return surgeFactorMap.get(factors.get(value));
     }
 }

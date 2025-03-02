@@ -1,9 +1,9 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
-import com.codingshuttle.project.uber.uberApp.entities.RideRequest;
-import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
-import com.codingshuttle.project.uber.uberApp.repositories.RideRequestRepository;
-import com.codingshuttle.project.uber.uberApp.services.RideRequestService;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
+import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
+import com.dhruvil.project.rideBooking.Ride.Booking.repositories.RideRequestRepository;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.RideRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,8 @@ public class RideRequestServiceImpl implements RideRequestService {
     public RideRequest findRideRequestById(Long rideRequestId) {
         return rideRequestRepository.findById(rideRequestId)
                 .orElseThrow(() -> new ResourceNotFoundException("RideRequest not found with id: "+rideRequestId));
+//        return rideRequestRepository.findById(rideRequestId)
+//                .orElseThrow(() -> new ResourceNotFoundException("RideRequest not found with id: "+rideRequestId));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.controller;
 
-import com.codingshuttle.project.uber.uberApp.dto.*;
-import com.codingshuttle.project.uber.uberApp.services.RiderService;
+import com.dhruvil.project.rideBooking.Ride.Booking.dto.*;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.RiderService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

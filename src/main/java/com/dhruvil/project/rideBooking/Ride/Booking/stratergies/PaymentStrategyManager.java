@@ -1,8 +1,8 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.stratergies;
 
-import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentMethod;
-import com.codingshuttle.project.uber.uberApp.strategies.impl.CashPaymentStrategy;
-import com.codingshuttle.project.uber.uberApp.strategies.impl.WalletPaymentStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.PaymentMethod;
+import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl.CashPaymentStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.impl.WalletPaymentStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
