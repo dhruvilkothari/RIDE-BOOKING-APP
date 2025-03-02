@@ -1,18 +1,14 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
-import com.codingshuttle.project.uber.uberApp.dto.RideDto;
-import com.codingshuttle.project.uber.uberApp.dto.WalletDto;
-import com.codingshuttle.project.uber.uberApp.dto.WalletTransactionDto;
-import com.codingshuttle.project.uber.uberApp.entities.Ride;
-import com.codingshuttle.project.uber.uberApp.entities.User;
-import com.codingshuttle.project.uber.uberApp.entities.Wallet;
-import com.codingshuttle.project.uber.uberApp.entities.WalletTransaction;
-import com.codingshuttle.project.uber.uberApp.entities.enums.TransactionMethod;
-import com.codingshuttle.project.uber.uberApp.entities.enums.TransactionType;
-import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
-import com.codingshuttle.project.uber.uberApp.repositories.WalletRepository;
-import com.codingshuttle.project.uber.uberApp.services.WalletService;
-import com.codingshuttle.project.uber.uberApp.services.WalletTransactionService;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.Ride;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.Wallet;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.WalletTransaction;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionMethod;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionType;
+import com.dhruvil.project.rideBooking.Ride.Booking.repositories.WalletRepository;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.WalletService;
+import com.dhruvil.project.rideBooking.Ride.Booking.services.WalletTransactionService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
