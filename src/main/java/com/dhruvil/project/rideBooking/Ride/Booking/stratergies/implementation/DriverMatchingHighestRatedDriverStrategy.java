@@ -3,6 +3,7 @@ import com.dhruvil.project.rideBooking.Ride.Booking.entities.Driver;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.DriverRepository;
 import com.dhruvil.project.rideBooking.Ride.Booking.stratergies.DriverMatchingStrategy;
+import com.dhruvil.project.rideBooking.Ride.Booking.utils.InfoLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ public class DriverMatchingHighestRatedDriverStrategy implements DriverMatchingS
 
     @Override
     public List<Driver> findMatchingDriver(RideRequest rideRequest) {
+
         return driverRepository.findTenNearbyTopRatedDrivers(rideRequest.getPickupLocation());
+
     }
 }

@@ -4,6 +4,8 @@ import com.dhruvil.project.rideBooking.Ride.Booking.entities.Ride;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Wallet;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionMethod;
+import org.springframework.stereotype.Service;
+
 
 public interface WalletService {
 
