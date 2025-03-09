@@ -1,7 +1,8 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.entities;
 
-import com.codingshuttle.project.uber.uberApp.entities.enums.TransactionMethod;
-import com.codingshuttle.project.uber.uberApp.entities.enums.TransactionType;
+
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionMethod;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

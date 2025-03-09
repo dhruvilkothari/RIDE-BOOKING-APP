@@ -1,6 +1,7 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.services.impl;
 
-import com.codingshuttle.project.uber.uberApp.services.EmailSenderService;
+
+import com.dhruvil.project.rideBooking.Ride.Booking.services.EmailSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;

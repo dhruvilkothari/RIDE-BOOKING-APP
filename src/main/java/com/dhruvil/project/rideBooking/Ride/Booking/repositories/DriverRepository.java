@@ -1,7 +1,6 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.repositories;
 
-import com.codingshuttle.project.uber.uberApp.entities.Driver;
-import com.codingshuttle.project.uber.uberApp.entities.User;
+
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.Driver;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
 import org.locationtech.jts.geom.Point;

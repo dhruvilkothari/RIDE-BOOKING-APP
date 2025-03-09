@@ -1,7 +1,8 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.repositories;
 
-import com.codingshuttle.project.uber.uberApp.entities.Rider;
-import com.codingshuttle.project.uber.uberApp.entities.User;
+
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.Rider;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

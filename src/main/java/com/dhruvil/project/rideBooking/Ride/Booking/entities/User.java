@@ -1,6 +1,6 @@
 package com.dhruvil.project.rideBooking.Ride.Booking.entities;
 
-import com.codingshuttle.project.uber.uberApp.entities.enums.Role;
+import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
