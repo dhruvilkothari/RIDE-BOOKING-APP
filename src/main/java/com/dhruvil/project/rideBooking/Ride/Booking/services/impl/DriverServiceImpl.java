@@ -8,6 +8,7 @@ import com.dhruvil.project.rideBooking.Ride.Booking.entities.Ride;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.RideRequest;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.User;
 import com.dhruvil.project.rideBooking.Ride.Booking.entities.enums.RideStatus;
+import com.dhruvil.project.rideBooking.Ride.Booking.exceptions.ResourceNotFoundException;
 import com.dhruvil.project.rideBooking.Ride.Booking.repositories.DriverRepository;
 import com.dhruvil.project.rideBooking.Ride.Booking.services.*;
 import lombok.RequiredArgsConstructor;
