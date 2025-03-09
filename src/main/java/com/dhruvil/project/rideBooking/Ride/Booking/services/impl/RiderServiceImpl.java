@@ -38,6 +38,7 @@ public class RiderServiceImpl implements RiderService {
     private final RideService rideService;
     private final DriverService driverService;
     private final RatingService ratingService;
+    private final EmailSenderServiceImpl emailSenderService;
 
     @Override
     @Transactional
@@ -55,8 +56,11 @@ public class RiderServiceImpl implements RiderService {
         List<Driver> drivers = rideStrategyManager
                 .driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
 
-//        TODO : Send notification to all the drivers about this ride request
-
+        drivers.forEach(driver -> {
+            emailSenderService.sendEmail(driver.getUser().getEmail(),
+                    "New Ride Request",
+                    "You have a new ride request from " + rider.getUser().getName());
+        });
         return modelMapper.map(savedRideRequest, RideRequestDto.class);
     }
 
